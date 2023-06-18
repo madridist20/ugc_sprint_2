@@ -2,7 +2,7 @@ from clickhouse_driver import Client # type: ignore
 import datetime
 import concurrent.futures
 from tqdm import tqdm
-from typing import List, Tuple, Any
+from typing import List, Tuple
 
 # Connect to ClickHouse server
 client = Client('localhost')
@@ -24,9 +24,9 @@ client.execute(create_table_query)
 # Function to generate user progress entries
 def generate_entries(start_index: int, end_index: int) -> List[Tuple[int, int, float, datetime.datetime]]:
     entries = []
-    for i in range(start_index, end_index):
-        progress = i / 1000.0  # Example: Progress ranges from 0.0 to 10,000.0
-        timestamp = current_timestamp + datetime.timedelta(seconds=i)
+    for ind in range(start_index, end_index):
+        progress = ind / 1000.0  # Example: Progress ranges from 0.0 to 10,000.0
+        timestamp = current_timestamp + datetime.timedelta(seconds=ind)
 
         entry = (user_id, movie_id, progress, timestamp)
         entries.append(entry)
