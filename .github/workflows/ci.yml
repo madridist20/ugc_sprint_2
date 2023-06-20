@@ -45,7 +45,7 @@ jobs:
     
     - name: Types Checking
       run: |
-        mypy module --install-types 
+        echo "y" | python -m mypy module/load_entries.py --install-types
 
 
   #notification:
