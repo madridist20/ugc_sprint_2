@@ -1,49 +1,50 @@
 name: Continuous Integration
 
+#on:
+  #push:
+    #branches: [ main ]
+  #pull_request:
+    #branches: [ main ] 
 on: [push, pull_request]
 
 jobs:
-  linting:
-    name: Linting
+  build:
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run Flake8
-        run: flake8 module
-
-  typing:
-    name: Type Checking
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run Mypy
-        run: mypy module
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 module --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 module --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Types Checking
+      run: mypy module
 
 
   notification:
     name: Telegram Notification
     runs-on: ubuntu-latest
     steps:
+
       - name: Send telegram message on push
         uses: appleboy/telegram-action@master
         with:
