@@ -41,7 +41,7 @@ platformdirs==3.6.0
 pluggy==1.0.0
 pycodestyle<2.10.0
 pydocstyle==6.3.0
-pyflakes==3.0.1
+pyflakes<2.6.0
 Pygments==2.15.1
 pyproject-api==1.5.2
 pytz==2023.3
