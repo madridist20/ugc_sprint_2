@@ -44,7 +44,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Types Checking
-      run: mypy . --install-types --exclude=ugc/src/core/settings.py
+      run: mypy . --install-types --exclude ugc/src/core/settings.py
 
 
   notification:
