@@ -13,22 +13,18 @@ services:
     depends_on:
       - kafka
       - zookeeper
-    networks:
-      - ugc_network
 
   zookeeper:
     image: zookeeper:3.5
     container_name: zookeeper
     hostname: zookeeper
-    networks:
-      - ugc_network
+
 
   kafka:
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
     hostname: kafka
-    networks:
-      - ugc_network
+
     ports:
       # To learn about configuring Kafka for access across networks see
       # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
@@ -52,8 +48,7 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
-    networks:
-      - ugc_network
+
 
   nginx:
     image: nginx:1.19.2
@@ -65,6 +60,35 @@ services:
       - app
     ports:
       - 80:80
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.2
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+    volumes:
+      - /tmp/esdata:/tmp/elasticsearch/data
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.14.2
+    environment:
+      ES_HOST: "elasticsearch:9200"
+      XPACK_MONITORING_ENABLED: "false"
+    ports:
+      - "5044:5044/udp"
+    volumes:
+      - ./filebeat/filebeat.yml:/config/filebeat.yml:ro
+    command: logstash -f /config/filebeat.yml
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.14.2
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch  
 
   filebeat:
     build:
@@ -82,10 +106,3 @@ services:
 
 volumes:
   mongodb_data_container:
-
-networks:
-  default:
-    external:
-      name: ugc_network
-  ugc_network:
-    driver: bridge
