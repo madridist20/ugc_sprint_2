@@ -16,7 +16,7 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        run: pip install -r requirements.txt  # Replace with your dependency installation command(s)
+        run: pip install -r requirements.txt
 
       - name: Run Flake8
         run: flake8 module
@@ -31,13 +31,28 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.11  # Replace 'x' with the desired version(s)
+          python-version: 3.11
 
       - name: Install dependencies
-        run: pip install -r requirements.txt  # Replace with your dependency installation command(s)
+        run: pip install -r requirements.txt
 
       - name: Run Mypy
         run: mypy module
 
-  # Add more steps or jobs as needed for other tasks or tests
 
+  notification:
+    name: Telegram Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
