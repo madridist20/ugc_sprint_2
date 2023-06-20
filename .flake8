@@ -1,0 +1,26 @@
+[flake8]
+max-line-length = 111
+extend-ignore = E203, W503
+select = C, E, F, W, B, B9
+ignore = E501, E722, W503, E261, WPS301, WPS440, WPS221
+
+# Plugins
+plugins = mccabe, pydocstyle, flake8-docstrings, flake8-wemake, flake8-html
+
+# Per-file-ignores
+per-file-ignores =
+    ;path/to/file.py: F401, E402
+
+# Exclude directories or files
+exclude =
+    .git,
+    __pycache__,
+
+# Enable strict type hints (requires Python 3.5+ and type hints in code)
+# (mypy plugin)
+[mypy]
+ignore_missing_imports = True
+
+# Pydocstyle (docstring style checker) configurations
+[pydocstyle]
+convention = google
