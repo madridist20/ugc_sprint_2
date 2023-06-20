@@ -23,7 +23,7 @@ flake8-html
 flake8-isort
 flake8-quotes
 flake8-rst-docstrings
-flake8-string-format==0.3.0
+flake8-string-format
 gitdb==4.0.10
 GitPython==3.1.31
 isort==6.0.0b2
@@ -36,7 +36,7 @@ mypy==1.3.0
 mypy-extensions==1.0.0
 packaging==23.1
 pbr==5.11.1
-pep8-naming==0.13.3
+pep8-naming
 platformdirs==3.6.0
 pluggy
 pycodestyle
@@ -55,4 +55,4 @@ types-tqdm==4.65.0.1
 typing_extensions==4.6.3
 tzlocal==5.0.1
 virtualenv
-wemake-python-styleguide==0.17.0
+wemake-python-styleguide
