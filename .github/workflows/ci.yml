@@ -45,8 +45,7 @@ jobs:
     
     - name: Types Checking
       run: |
-        mypy --install-types
-        mypy module
+        mypy module --install-types 
 
 
   #notification:
