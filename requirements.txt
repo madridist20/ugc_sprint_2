@@ -39,7 +39,7 @@ pbr==5.11.1
 pep8-naming==0.13.3
 platformdirs==3.6.0
 pluggy==1.0.0
-pycodestyle==2.10.0
+pycodestyle<2.10.0
 pydocstyle==6.3.0
 pyflakes==3.0.1
 Pygments==2.15.1
