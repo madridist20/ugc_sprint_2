@@ -50,7 +50,7 @@ restructuredtext-lint==1.4.0
 rich==13.4.2
 smmap==5.0.0
 snowballstemmer==2.2.0
-stevedore==5.1.0
+stevedore==3.5.2
 types-tqdm==4.65.0.1
 typing_extensions==4.6.3
 tzlocal==5.0.1
