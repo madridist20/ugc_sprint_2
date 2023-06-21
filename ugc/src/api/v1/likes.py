@@ -1,7 +1,7 @@
 """CRUD на лайки."""
-from typing import Any
+from typing import Any, Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from models.like import Like
@@ -16,8 +16,8 @@ auth_handler = Auth()
 @router.get("/", response_model=list[Like], description="Список лайков")
 async def get_likes_list(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    limit: int = 10,
-    offset: int = 0,
+    limit: Annotated[int, Query(description='Pagination page size', ge=1)] = 10,
+    offset: Annotated[int, Query(description='Pagination page offset', ge=0)] = 0,
 ) -> Any:
     """
     Список лайков

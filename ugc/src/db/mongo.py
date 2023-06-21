@@ -1,12 +1,10 @@
 """Mongo DB adapter."""
-from core.settings import Settings
+from core.settings import settings
 from motor.motor_asyncio import (
     AsyncIOMotorClient,
     AsyncIOMotorCollection,
     AsyncIOMotorCursor,
 )
-
-settings = Settings()
 
 
 class Mongo:
@@ -25,8 +23,8 @@ class Mongo:
         self,
         collection_name: str,
         condition: dict,
-        limit: int = settings.DEFAULT_LIMIT,
-        offset: int = settings.DEFAULT_OFFSET,
+        limit: int = settings.default_limit,
+        offset: int = settings.default_offset,
     ) -> AsyncIOMotorCursor:
         """Read data from mongoDB."""
         collection = self._get_collection(collection_name)
@@ -58,3 +56,12 @@ class Mongo:
         """Delete from mongoDB."""
         collection = self._get_collection(collection_name)
         await collection.delete_many(condition)
+
+    async def upsert(
+        self,
+        collection_name: str,
+        condition: dict,
+    ) -> None:
+        """Delete from mongoDB."""
+        collection = self._get_collection(collection_name)
+        await collection.find_one_and_update(condition)

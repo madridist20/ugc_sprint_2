@@ -14,12 +14,12 @@ settings = Settings()
 
 async def get_likes_list(
     user_id: str,
-    limit: int = settings.DEFAULT_LIMIT,
-    offset: int = settings.DEFAULT_OFFSET,
+    limit: int = settings.default_limit,
+    offset: int = settings.default_offset,
 ) -> list[Like]:
     """Получить список лайков"""
     data = await mongo.find(
-        settings.MONGO_COLLECTION_LIKE, {"user_id": user_id}, limit=limit, offset=offset
+        settings.mongo_collection_like, {"user_id": user_id}, limit=limit, offset=offset
     )
     return [Like(**item) async for item in data]
 
@@ -27,7 +27,7 @@ async def get_likes_list(
 async def get_like(user_id: str, film_id: str) -> Optional[Like]:
     """Получить один лайк"""
     data = await mongo.find_one(
-        settings.MONGO_COLLECTION_LIKE, {"user_id": user_id, "film_id": film_id}
+        settings.mongo_collection_like, {"user_id": user_id, "film_id": film_id}
     )
     if not data:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND)
@@ -36,24 +36,19 @@ async def get_like(user_id: str, film_id: str) -> Optional[Like]:
 
 async def create_like(user_id: str, film_id: str) -> Like:
     """Создать лайк"""
-    data = await mongo.find_one(
-        settings.MONGO_COLLECTION_LIKE, {"user_id": user_id, "film_id": film_id}
-    )
-    if data:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
     data = Like(user_id=user_id, film_id=film_id, dt=datetime.now())
-    await mongo.insert(settings.MONGO_COLLECTION_LIKE, data.dict())
+    await mongo.upsert(settings.mongo_collection_like, data.dict())
     return data
 
 
 async def remove_like(user_id: str, film_id: str) -> None:
     """Удалить лайк"""
     data = await mongo.find_one(
-        settings.MONGO_COLLECTION_LIKE, {"user_id": user_id, "film_id": film_id}
+        settings.mongo_collection_like, {"user_id": user_id, "film_id": film_id}
     )
     if not data:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND)
 
     await mongo.delete(
-        settings.MONGO_COLLECTION_LIKE, {"user_id": user_id, "film_id": film_id}
+        settings.mongo_collection_like, {"user_id": user_id, "film_id": film_id}
     )

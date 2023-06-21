@@ -15,9 +15,9 @@ from src.api.v1 import likes
 settings = Settings()
 
 
-if settings.SENTRY_DSN:
+if settings.sentry_dsn:
     sentry_sdk.init(
-        dsn=settings.SENTRY_DSN,
+        dsn=settings.sentry_dsn,
         traces_sample_rate=settings.traces_sample_rate,
     )
 
